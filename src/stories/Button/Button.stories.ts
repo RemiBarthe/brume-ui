@@ -10,14 +10,14 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     size: { control: 'select', options: ['base', 'small'] },
-    variant: { control: 'select', options: ['primary', 'red', 'green', 'black'] },
+    variant: { control: 'select', options: ['primary', 'red', 'green'] },
     expanded: { control: 'boolean' },
     icon: { control: false },
     iconOnly: { control: 'boolean' },
-    isDisabled: { control: 'boolean' }
+    disabled: { control: 'boolean' }
   },
   args: {
-    size: 'base',
+    label: 'Button',
     // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
     onClick: fn()
   }
@@ -26,58 +26,40 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+export const Default: Story = {
+  args: { variant: undefined }
+};
+
 export const Primary: Story = {
-  args: {
-    variant: 'primary',
-    label: 'Button'
-  }
+  args: { variant: 'primary' }
 };
 
 export const Green: Story = {
-  args: {
-    variant: 'green',
-    label: 'Button'
-  }
+  args: { variant: 'green' }
 };
 
 export const Red: Story = {
-  args: {
-    variant: 'red',
-    label: 'Button'
-  }
+  args: { variant: 'red' }
 };
 
 export const Small: Story = {
-  args: {
-    label: 'Button',
-    size: 'small'
-  }
+  args: { size: 'small' }
 };
 
 export const Expanded: Story = {
-  args: {
-    label: 'Button',
-    expanded: true
-  }
+  args: { expanded: true }
 };
 
 export const Disabled: Story = {
-  args: {
-    label: 'Button',
-    isDisabled: true
-  }
+  args: { disabled: true }
 };
 
 export const WithIcon: Story = {
-  args: {
-    label: 'Button',
-    icon: IconHeart
-  }
+  args: { icon: IconHeart }
 };
 
 export const IconOnly: Story = {
   args: {
-    label: 'Button',
     icon: IconHeart,
     iconOnly: true
   }
