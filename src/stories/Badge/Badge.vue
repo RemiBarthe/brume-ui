@@ -48,8 +48,8 @@ const iconSize = computed(() => (props.size === 'sm' ? 'size-3' : 'size-3.5'));
 
     {{ label }}
 
-    <button v-if="closable" @click="emit('close')" class="cursor-pointer">
-      <IconX title="Close" :class="iconSize" />
+    <button v-if="closable" @click="emit('close')" aria-label="Close" class="cursor-pointer">
+      <IconX :class="iconSize" aria-hidden="true" />
     </button>
   </span>
 </template>
