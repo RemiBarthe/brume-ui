@@ -1,13 +1,13 @@
 <template>
-  <button type="button" :class="classes" @click="onClick" :disabled>
-    <component v-if="icon" :is="icon" aria-hidden="true" size="1.25em" />
+  <button type="button" :class="classes" :disabled @click="onClick">
+    <component :is="icon" v-if="icon" aria-hidden="true" size="1.25em" />
     <span :class="{ 'sr-only': iconOnly }">{{ label }}</span>
   </button>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
 import type { Icon } from '@tabler/icons-vue';
+import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{

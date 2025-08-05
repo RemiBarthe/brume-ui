@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import type { Icon } from '@tabler/icons-vue';
 import { IconX } from '@tabler/icons-vue';
+import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -44,17 +44,17 @@ const iconSize = computed(() => (props.size === 'sm' ? 'size-3' : 'size-3.5'));
 
 <template>
   <span :class="classes">
-    <component v-if="icon" :is="icon" :class="iconSize" />
+    <component :is="icon" v-if="icon" :class="iconSize" />
 
     {{ label }}
 
     <button
       v-if="closable"
-      @click="emit('close')"
-      aria-label="Close"
       class="focus:ring-primary-500 cursor-pointer rounded outline-none focus:ring-2"
+      :aria-label="`Close ${label}`"
+      @click="emit('close')"
     >
-      <IconX :class="iconSize" aria-hidden="true" />
+      <IconX aria-hidden="true" :class="iconSize" />
     </button>
   </span>
 </template>

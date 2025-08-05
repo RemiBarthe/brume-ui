@@ -5,7 +5,8 @@
   "bracketSpacing": true,
   "plugins": [
     "@ianvs/prettier-plugin-sort-imports",
-    "prettier-plugin-tailwindcss"
+    "prettier-plugin-tailwindcss",
+    "prettier-plugin-organize-attributes"
   ],
   "importOrder": [
     "^vue",
@@ -16,5 +17,21 @@
     "^@/pages/(.)$",
     "^@/utils/(.*)$",
     "^[./]"
+  ],
+  "attributeGroups": [
+    "^(:is|is)$",
+    "^v-for$",
+    "^v-if$",
+    "^v-else.*$",
+    "^v-show$",
+    "^(ref|:key|key|v-slot:.*|#.*|slot)$",
+    "^v-.*",
+    "^(id|name|type|value|role|title)$",
+    "^class$",
+    "^style$",
+    "^aria-.*",
+    "$DEFAULT",
+    "^:.*",
+    "^@.*"
   ]
 }

@@ -1,11 +1,11 @@
 <template>
   <div :class="['relative inline-flex items-center', { 'w-full': expanded }, { 'text-gray-500': disabled }]">
     <select
+      v-model="model"
       :class="[
         'appearance-none rounded-md px-3 py-2 pr-8 outline-none not-disabled:hover:bg-gray-50 focus:bg-gray-50 focus:ring-3 focus:ring-gray-300 disabled:cursor-not-allowed disabled:bg-transparent disabled:text-gray-500 not-disabled:dark:hover:bg-gray-900 not-disabled:dark:focus:bg-gray-900',
         { 'w-full': expanded }
       ]"
-      v-model="model"
       :aria-label="label"
       :disabled
     >
