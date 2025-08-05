@@ -27,10 +27,10 @@ const sizeClasses = {
 };
 
 const variantClasses = {
-  base: 'bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100',
-  primary: 'bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-300',
-  red: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-  green: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+  base: 'bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300',
+  primary: 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300',
+  red: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+  green: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
 };
 
 const classes = computed(() => [
@@ -48,7 +48,12 @@ const iconSize = computed(() => (props.size === 'sm' ? 'size-3' : 'size-3.5'));
 
     {{ label }}
 
-    <button v-if="closable" @click="emit('close')" aria-label="Close" class="cursor-pointer">
+    <button
+      v-if="closable"
+      @click="emit('close')"
+      aria-label="Close"
+      class="focus:ring-primary-500 cursor-pointer rounded outline-none focus:ring-2"
+    >
       <IconX :class="iconSize" aria-hidden="true" />
     </button>
   </span>
