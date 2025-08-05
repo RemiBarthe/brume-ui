@@ -1,16 +1,24 @@
 <template>
   <h1 class="font-display text-4xl">Hello world!</h1>
-  <p class="mb-4">To start your journey toward a better life, fill in this form first.</p>
+  <p class="mb-8">To start your journey toward a better life, fill in this form first.</p>
+
+  <div class="flex gap-2 mb-4">
+    <Badge label="BrumeUI" variant="primary" />
+    <Badge label="Vuetify" variant="red" />
+    <Badge variant="green">Shadcn</Badge>
+    <Badge label="NuxtUI" />
+  </div>
 
   <div class="flex gap-4">
     <Select v-model="userCountry" label="Choose your country" :options="countries" />
-    <Button label="Next" :icon="IconArrowNarrowRight" :disabled="!userCountry" @click="submit()" />
+    <Button label="Next" variant="primary" :icon="IconArrowNarrowRight" :disabled="!userCountry" @click="submit()" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { IconArrowNarrowRight } from '@tabler/icons-vue';
 import { ref } from 'vue';
+import Badge from './Badge/Badge.vue';
 import Button from './Button/Button.vue';
 import Select, { type SelectOption } from './Select/Select.vue';
 

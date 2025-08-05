@@ -5,7 +5,7 @@ import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    label: string;
+    label?: string;
     size?: 'base' | 'sm';
     variant?: 'base' | 'primary' | 'red' | 'green';
     icon?: Icon;
@@ -46,12 +46,12 @@ const iconSize = computed(() => (props.size === 'sm' ? 'size-3' : 'size-3.5'));
   <span :class="classes">
     <component :is="icon" v-if="icon" :class="iconSize" />
 
-    {{ label }}
+    <slot>{{ label }}</slot>
 
     <button
       v-if="closable"
       class="focus:ring-primary-500 cursor-pointer rounded outline-none focus:ring-2"
-      :aria-label="`Close ${label}`"
+      :aria-label="`Close ${label || 'badge'}`"
       @click="emit('close')"
     >
       <IconX aria-hidden="true" :class="iconSize" />
