@@ -1,5 +1,5 @@
 <template>
-  <h1 class="font-display text-4xl">Hello world!</h1>
+  <h1 class="font-display text-4xl font-medium">Hello world!</h1>
   <p class="mb-8">To start your journey toward a better life, fill in this form first.</p>
 
   <div class="flex gap-2 mb-4">
@@ -9,40 +9,43 @@
     <Badge label="NuxtUI" />
   </div>
 
-  <div class="flex gap-4">
-    <Select v-model="userCountry" label="Choose your country" :options="countries" />
-    <Button label="Next" variant="primary" :icon="IconArrowNarrowRight" :disabled="!userCountry" @click="submit()" />
-  </div>
+  <form class="flex flex-col gap-4" ref="signUpForm" @submit.prevent="signUp">
+    <Alert type="info">Please notice that we won't store any of your personnal data.</Alert>
+    <Input v-model="userName" placeholder="e.g. Conan" label="Name" required show-label />
+    <Select v-model="userIsland" :options="islands" label="Where are you from?" required show-label />
+
+    <div class="flex justify-end gap-2">
+      <Button :icon="IconArrowNarrowLeft" label="Back" disabled />
+      <Button type="submit" variant="primary">
+        Next
+        <IconArrowNarrowRight aria-hidden="true" size="1.25em" />
+      </Button>
+    </div>
+  </form>
 </template>
 
 <script lang="ts" setup>
-import { IconArrowNarrowRight } from '@tabler/icons-vue';
 import { ref } from 'vue';
+import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-vue';
+import Alert from './Alert/Alert.vue';
 import Badge from './Badge/Badge.vue';
 import Button from './Button/Button.vue';
-import Select, { type SelectOption } from './Select/Select.vue';
+import Input from './Input/Input.vue';
+import Select from './Select/Select.vue';
 
-const countries: SelectOption[] = [
-  { value: 'fr', text: 'France' },
-  { value: 'uk', text: 'United Kingdom' },
-  { value: 'es', text: 'Spain' }
-];
+const signUpForm = ref<HTMLFormElement | null>(null);
 
-const userCountry = ref<string>();
+const islands: Record<string, string> = {
+  'the-lost-island': 'The Lost Island',
+  industria: 'Industria',
+  edenia: 'Edennia'
+};
 
-const submit = () => {
-  switch (userCountry.value) {
-    case 'fr':
-      alert('Bienvenue à bord!');
-      break;
-    case 'uk':
-      alert('Welcome on board!');
-      break;
-    case 'es':
-      alert('¡Bienvenid a bordo!');
-      break;
-    default:
-      return;
-  }
+const userName = ref('');
+const userIsland = ref(Object.keys(islands)[0]);
+
+const signUp = () => {
+  if (!userName.value || !userIsland.value) return;
+  alert(`Welcome on board ${userName.value} from ${islands[userIsland.value]}!`);
 };
 </script>
