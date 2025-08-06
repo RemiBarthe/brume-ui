@@ -10,8 +10,7 @@ const meta = {
   }),
   parameters: {
     layout: 'centered'
-  },
-  tags: ['autodocs']
+  }
 } satisfies Meta<typeof Playground>;
 
 export default meta;
