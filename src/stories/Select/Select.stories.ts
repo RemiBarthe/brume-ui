@@ -8,16 +8,17 @@ const meta = {
   argTypes: {
     label: { control: 'text' },
     options: { control: 'object' },
-    expanded: { control: 'boolean' },
+    placeholder: { control: 'text' },
+    showLabel: { control: 'boolean' },
     disabled: { control: 'boolean' }
   },
   args: {
     label: 'Select your country',
-    options: [
-      { value: 'fr', text: 'France' },
-      { value: 'uk', text: 'United Kingdom' },
-      { value: 'es', text: 'Spain' }
-    ]
+    options: {
+      fr: 'France',
+      uk: 'United Kingdom',
+      es: 'Spain'
+    }
   }
 } satisfies Meta<typeof Select>;
 
@@ -26,8 +27,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Expanded: Story = {
-  args: { expanded: true }
+export const WithPlaceholder: Story = {
+  args: { placeholder: 'Choose your country' }
+};
+
+export const ShowLabel: Story = {
+  args: { showLabel: true }
 };
 
 export const Disabled: Story = {
