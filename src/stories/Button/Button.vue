@@ -1,21 +1,3 @@
-<template>
-  <button
-    :class="[
-      'ui-control flex cursor-pointer items-center justify-center border-transparent! font-medium',
-      buttonVariant,
-      buttonSize
-    ]"
-    :disabled
-  >
-    <slot />
-
-    <template v-if="!(slots.default && slots.default().length)">
-      <component v-if="icon" :is="icon" aria-hidden="true" size="1.25em" />
-      <span :class="{ 'sr-only': iconOnly }">{{ label }}</span>
-    </template>
-  </button>
-</template>
-
 <script lang="ts" setup>
 import { computed, useSlots } from 'vue';
 import type { Icon } from '@tabler/icons-vue';
@@ -72,3 +54,21 @@ const buttonSize = computed(() => [
 //     `bg-red-500 text-white hover:bg-red-600 focus:bg-red-600 focus:ring-red-300 active:bg-red-700 disabled:bg-red-300 dark:disabled:bg-red-800 dark:disabled:text-gray-500`
 // ]);
 </script>
+
+<template>
+  <button
+    :class="[
+      'ui-control flex cursor-pointer items-center justify-center border-transparent! font-medium',
+      buttonVariant,
+      buttonSize
+    ]"
+    :disabled
+  >
+    <slot />
+
+    <template v-if="!(slots.default && slots.default().length)">
+      <component v-if="icon" :is="icon" aria-hidden="true" size="1.25em" />
+      <span :class="{ 'sr-only': iconOnly }">{{ label }}</span>
+    </template>
+  </button>
+</template>

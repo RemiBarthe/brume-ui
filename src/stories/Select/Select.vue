@@ -1,3 +1,17 @@
+<script lang="ts" setup>
+import { IconSelector } from '@tabler/icons-vue';
+
+const model = defineModel();
+defineProps<{
+  label: string;
+  options: Record<string, string>;
+  placeholder?: string;
+  showLabel?: boolean;
+  required?: boolean;
+  disabled?: boolean;
+}>();
+</script>
+
 <template>
   <label class="inline-flex flex-col space-y-1">
     <span :class="['text-semibold text-sm', { 'text-gray-500': disabled }, { 'sr-only': !showLabel }]">
@@ -17,17 +31,3 @@
     </div>
   </label>
 </template>
-
-<script lang="ts" setup>
-import { IconSelector } from '@tabler/icons-vue';
-
-const model = defineModel();
-const props = defineProps<{
-  label: string;
-  options: Record<string, string>;
-  placeholder?: string;
-  showLabel?: boolean;
-  required?: boolean;
-  disabled?: boolean;
-}>();
-</script>
