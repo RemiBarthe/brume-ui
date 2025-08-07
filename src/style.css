@@ -63,7 +63,7 @@
     background-color: var(--color-white);
   }
 
-  .dark body {
+  .dark body, .dark .docs-story {
     color: var(--color-white);
     background-color: var(--color-black);
   }
