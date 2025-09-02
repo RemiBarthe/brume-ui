@@ -1,23 +1,13 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 const isOpen = ref(false);
 const triggerRef = ref<HTMLElement>();
 const menuRef = ref<HTMLElement>();
-const menuId = `dropdown-menu-${Math.random().toString(36).substr(2, 9)}`;
+const menuId = `dropdown-menu-${Math.random().toString(36).substring(2, 11)}`;
 
 const toggle = () => {
   isOpen.value = !isOpen.value;
-  if (isOpen.value) {
-    nextTick(() => {
-      const firstFocusable = menuRef.value?.querySelector(
-        '[tabindex="0"], button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (firstFocusable instanceof HTMLElement) {
-        firstFocusable.focus();
-      }
-    });
-  }
 };
 
 const close = () => {
