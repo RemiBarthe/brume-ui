@@ -1,122 +1,132 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, provide, ref, toRef } from 'vue';
-import {
-  DROPDOWN_MENU_INJECTION_KEY,
-  type DismissMeta,
-  type DropdownDir,
-  type DropdownMenuContext
-} from './dropdown-context';
+import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 
-function useControllableBoolean(options: {
-  model?: () => boolean | undefined;
-  defaultValue: boolean;
-  onChange?: (next: boolean) => void;
-}) {
-  const internal = ref<boolean>(options.defaultValue);
-  const isControlled = computed(() => options.model?.() !== undefined);
-  const current = computed<boolean>({
-    get: () => (isControlled.value ? !!options.model?.() : internal.value),
-    set: (v: boolean) => {
-      if (isControlled.value) {
-        options.onChange?.(v);
-      } else {
-        internal.value = v;
-        options.onChange?.(v);
-      }
-    }
-  });
-  return { value: current, isControlled };
-}
+const isOpen = ref(false);
+const triggerRef = ref<HTMLElement>();
+const menuRef = ref<HTMLElement>();
+const menuId = `dropdown-menu-${Math.random().toString(36).substr(2, 9)}`;
 
-let uid = 0;
-const nextId = (prefix: string) => `${prefix}-${++uid}`;
-
-const props = withDefaults(
-  defineProps<{
-    open?: boolean;
-    defaultOpen?: boolean;
-    dir?: DropdownDir;
-    modal?: boolean;
-  }>(),
-  { defaultOpen: false, dir: 'ltr', modal: false }
-);
-
-const emit = defineEmits<{
-  (e: 'update:open', val: boolean): void;
-  (e: 'open-change', val: boolean, meta?: DismissMeta): void;
-  (e: 'dismiss', meta: DismissMeta): void;
-}>();
-
-const { value: isOpen } = useControllableBoolean({
-  model: () => props.open,
-  defaultValue: props.defaultOpen,
-  onChange(next) {
-    emit('update:open', next);
-    emit('open-change', next);
-  }
-});
-
-const dir = toRef(props, 'dir');
-
-const triggerId = nextId('dropdown-trigger');
-const contentId = nextId('dropdown-content');
-
-let _triggerEl: HTMLElement | null = null;
-let _contentEl: HTMLElement | null = null;
-const setTriggerEl = (el: HTMLElement | null) => (_triggerEl = el);
-const setContentEl = (el: HTMLElement | null) => (_contentEl = el);
-const triggerEl = () => _triggerEl;
-const contentEl = () => _contentEl;
-
-const openMenu = () => {
-  if (!isOpen.value) {
-    isOpen.value = true;
-    emit('open-change', true);
-  }
-};
-const closeMenu = (meta?: DismissMeta) => {
+const toggle = () => {
+  isOpen.value = !isOpen.value;
   if (isOpen.value) {
-    isOpen.value = false;
-    if (meta) emit('dismiss', meta);
-    emit('open-change', false, meta);
+    nextTick(() => {
+      const firstFocusable = menuRef.value?.querySelector(
+        '[tabindex="0"], button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (firstFocusable instanceof HTMLElement) {
+        firstFocusable.focus();
+      }
+    });
   }
 };
-const toggleMenu = (meta?: DismissMeta) => (isOpen.value ? closeMenu(meta) : openMenu());
 
-function onKeydownGlobal(ev: KeyboardEvent) {
-  if (ev.key !== 'Escape' || !isOpen.value) return;
-  const c = _contentEl;
-  if (!c) return;
-  if (c.contains(document.activeElement) || document.activeElement === _triggerEl) {
-    closeMenu({ reason: 'escape', event: ev });
-    _triggerEl?.focus();
+const close = () => {
+  isOpen.value = false;
+  triggerRef.value?.focus();
+};
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (!isOpen.value) return;
+
+  switch (event.key) {
+    case 'Escape':
+      event.preventDefault();
+      close();
+      break;
+    case 'ArrowDown':
+      event.preventDefault();
+      focusNextItem();
+      break;
+    case 'ArrowUp':
+      event.preventDefault();
+      focusPreviousItem();
+      break;
+    case 'Home':
+      event.preventDefault();
+      focusFirstItem();
+      break;
+    case 'End':
+      event.preventDefault();
+      focusLastItem();
+      break;
   }
-}
+};
+
+const getFocusableItems = () => {
+  if (!menuRef.value) return [];
+  return Array.from(
+    menuRef.value.querySelectorAll('[role="menuitem"]:not([disabled]), button:not([disabled]), [href]:not([disabled])')
+  ) as HTMLElement[];
+};
+
+const focusNextItem = () => {
+  const items = getFocusableItems();
+  const currentIndex = items.findIndex((item) => item === document.activeElement);
+  const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+  items[prevIndex]?.focus();
+};
+
+const focusPreviousItem = () => {
+  const items = getFocusableItems();
+  const currentIndex = items.findIndex((item) => item === document.activeElement);
+  const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+  items[nextIndex]?.focus();
+};
+
+const focusFirstItem = () => {
+  const items = getFocusableItems();
+  items[0]?.focus();
+};
+
+const focusLastItem = () => {
+  const items = getFocusableItems();
+  items[items.length - 1]?.focus();
+};
+
+const handleClickOutside = (event: MouseEvent) => {
+  if (!triggerRef.value?.contains(event.target as Node) && !menuRef.value?.contains(event.target as Node)) {
+    close();
+  }
+};
 
 onMounted(() => {
-  document.addEventListener('keydown', onKeydownGlobal);
+  document.addEventListener('click', handleClickOutside);
+  document.addEventListener('keydown', handleKeydown);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', onKeydownGlobal);
+  document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener('keydown', handleKeydown);
 });
-
-provide(DROPDOWN_MENU_INJECTION_KEY, {
-  open: isOpen,
-  dir,
-  triggerId,
-  contentId,
-  setTriggerEl,
-  setContentEl,
-  triggerEl,
-  contentEl,
-  openMenu,
-  closeMenu,
-  toggleMenu,
-  requestClose: (meta: DismissMeta) => closeMenu(meta)
-} satisfies DropdownMenuContext);
 </script>
 
 <template>
-  <slot />
+  <div class="relative">
+    <div ref="triggerRef">
+      <slot
+        name="activator"
+        :toggle="toggle"
+        :isOpen="isOpen"
+        :attrs="{
+          'aria-haspopup': 'menu',
+          'aria-expanded': isOpen,
+          'aria-controls': isOpen ? menuId : undefined,
+          role: 'button',
+          tabindex: '0'
+        }"
+      />
+    </div>
+
+    <div
+      v-if="isOpen"
+      ref="menuRef"
+      :id="menuId"
+      role="menu"
+      aria-orientation="vertical"
+      class="absolute z-50 mt-1 flex flex-col rounded-lg border border-gray-300 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-900"
+      @keydown="handleKeydown"
+    >
+      <slot />
+    </div>
+  </div>
 </template>

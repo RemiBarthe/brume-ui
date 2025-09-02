@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-vue';
+import { IconArrowNarrowLeft, IconArrowNarrowRight, IconDetails } from '@tabler/icons-vue';
 import Alert from './Alert/Alert.vue';
 import Badge from './Badge/Badge.vue';
 import Button from './Button/Button.vue';
 import Card from './Card/Card.vue';
+import DropdownMenu from './DropdownMenu/DropdownMenu.vue';
+import DropdownMenuItem from './DropdownMenu/DropdownMenuItem.vue';
 import Input from './Input/Input.vue';
 import Select from './Select/Select.vue';
 
@@ -35,6 +37,17 @@ const signUp = () => {
     <Badge variant="green">Shadcn</Badge>
     <Badge label="NuxtUI" />
   </div>
+
+  <DropdownMenu class="mb-4">
+    <template #activator="{ toggle, attrs }">
+      <Button v-bind="attrs" :icon="IconDetails" icon-only variant="primary" @click="toggle"> </Button>
+    </template>
+
+    <DropdownMenuItem> Éditer </DropdownMenuItem>
+    <DropdownMenuItem> Supprimer </DropdownMenuItem>
+    <DropdownMenuItem> Profil </DropdownMenuItem>
+    <DropdownMenuItem disabled> Action désactivée </DropdownMenuItem>
+  </DropdownMenu>
 
   <Card class="mb-2">
     <h2 class="mb-2 text-xl font-semibold">Welcome to BrumeUI</h2>
