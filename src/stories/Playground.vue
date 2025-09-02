@@ -43,10 +43,11 @@ const signUp = () => {
       <Button v-bind="attrs" :icon="IconDetails" icon-only variant="primary" @click="toggle"> </Button>
     </template>
 
-    <DropdownMenuItem> Éditer </DropdownMenuItem>
-    <DropdownMenuItem> Supprimer </DropdownMenuItem>
-    <DropdownMenuItem> Profil </DropdownMenuItem>
-    <DropdownMenuItem disabled> Action désactivée </DropdownMenuItem>
+    <DropdownMenuItem> Add new </DropdownMenuItem>
+    <DropdownMenuItem> Edit </DropdownMenuItem>
+    <DropdownMenuItem> Delete </DropdownMenuItem>
+    <DropdownMenuItem> Profile </DropdownMenuItem>
+    <DropdownMenuItem disabled> Action Disabled </DropdownMenuItem>
   </DropdownMenu>
 
   <Card class="mb-2">

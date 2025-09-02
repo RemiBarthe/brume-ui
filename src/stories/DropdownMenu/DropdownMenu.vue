@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 
 const isOpen = ref(false);
 const triggerRef = ref<HTMLElement>();
@@ -73,26 +74,22 @@ const focusLastItem = () => {
   items[items.length - 1]?.focus();
 };
 
-const handleClickOutside = (event: MouseEvent) => {
-  if (!triggerRef.value?.contains(event.target as Node) && !menuRef.value?.contains(event.target as Node)) {
-    close();
-  }
-};
+onClickOutside(triggerRef, () => {
+  close();
+});
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside);
   document.addEventListener('keydown', handleKeydown);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
   document.removeEventListener('keydown', handleKeydown);
 });
 </script>
 
 <template>
   <div class="relative">
-    <div ref="triggerRef">
+    <div ref="triggerRef" class="w-min">
       <slot
         name="activator"
         :toggle="toggle"
@@ -113,7 +110,7 @@ onUnmounted(() => {
       :id="menuId"
       role="menu"
       aria-orientation="vertical"
-      class="absolute z-50 mt-1 flex flex-col rounded-lg border border-gray-300 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-900"
+      class="absolute z-50 mt-1 flex min-w-max flex-col rounded-lg border border-gray-300 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-900"
       @keydown="handleKeydown"
     >
       <slot />
