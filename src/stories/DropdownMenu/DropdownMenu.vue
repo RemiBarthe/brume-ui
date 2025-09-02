@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 
 const isOpen = ref(false);
@@ -17,7 +17,18 @@ const close = () => {
 };
 
 const handleKeydown = (event: KeyboardEvent) => {
-  if (!isOpen.value) return;
+  if (!isOpen.value) {
+    switch (event.key) {
+      case 'ArrowDown':
+      case 'ArrowUp':
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        toggle();
+        break;
+    }
+    return;
+  }
 
   switch (event.key) {
     case 'Escape':
@@ -50,14 +61,14 @@ const getFocusableItems = () => {
   ) as HTMLElement[];
 };
 
-const focusNextItem = () => {
+const focusPreviousItem = () => {
   const items = getFocusableItems();
   const currentIndex = items.findIndex((item) => item === document.activeElement);
   const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
   items[prevIndex]?.focus();
 };
 
-const focusPreviousItem = () => {
+const focusNextItem = () => {
   const items = getFocusableItems();
   const currentIndex = items.findIndex((item) => item === document.activeElement);
   const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
@@ -77,19 +88,11 @@ const focusLastItem = () => {
 onClickOutside(triggerRef, () => {
   close();
 });
-
-onMounted(() => {
-  document.addEventListener('keydown', handleKeydown);
-});
-
-onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown);
-});
 </script>
 
 <template>
   <div class="relative">
-    <div ref="triggerRef" class="w-min">
+    <div ref="triggerRef" class="w-min" @keydown="handleKeydown">
       <slot
         name="activator"
         :toggle="toggle"

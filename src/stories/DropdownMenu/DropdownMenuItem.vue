@@ -32,10 +32,6 @@ const handleMouseLeave = (event: MouseEvent) => {
     focusedByMouse.value = false;
   }
 };
-
-const handleBlur = () => {
-  focusedByMouse.value = false;
-};
 </script>
 
 <template>
@@ -48,7 +44,6 @@ const handleBlur = () => {
     @click="handleClick"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
-    @blur="handleBlur"
   >
     <slot />
   </a>
@@ -63,7 +58,6 @@ const handleBlur = () => {
     @click="handleClick"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
-    @blur="handleBlur"
   >
     <slot />
   </button>
